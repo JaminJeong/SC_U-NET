@@ -26,7 +26,7 @@ I prepare CCMixter datasets in "./data" and Each track consisted of Mixed, instr
 <pre><code>$ python Test.py</code></pre>
 
 ## Paper
-Andreas Jansson, et al. SINGING VOICE SEPARATION WITH DEEP U-NET CONVOLUTIONAL NETWORKS. 2017. <br> paper: https://ismir2017.smcnus.org/wp-content/uploads/2017/10/171_Paper.pdf
+spectrogram-channels u-net: a source separation model viewing each channel as the spectrogram of each source
 
-## Original Implimentation
+## Base Implimentation
 * https://github.com/Jeongseungwoo/Singing-Voice-Separation
