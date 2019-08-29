@@ -11,12 +11,8 @@ This is an implementation of U-Net for vocal separation with tensorflow
 I download [dsd100](https://sigsep.github.io/datasets/dsd100.html) dataset.
 <pre><code>$ python download_data.py --DATADIR ./data </code></pre>
 
-## Make Instrument.wav
-I overlap wav files(drum, bass, other) for making instrument wav file.
-<pre><code>$ python make_ints.py --DATADIR ./data </code></pre>
-
 ## Data
-I prepare CCMixter datasets in "./data" and Each track consisted of Mixed, instrumental, Vocal version
+I prepare CCMixter datasets in "./data" and Each track consisted of Mixed, bass, drums, other, vocal version
 <pre><code>$ python CCMixter_process.py --DATADIR ./data </code></pre>
 
 ## Usage
