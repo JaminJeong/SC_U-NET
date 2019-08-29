@@ -26,7 +26,7 @@ I prepare CCMixter datasets in "./data" and Each track consisted of Mixed, instr
 <pre><code>$ python Test.py</code></pre>
 
 ## Paper
-spectrogram-channels u-net: a source separation model viewing each channel as the spectrogram of each source
+Jaehoon Oh et al. [spectrogram-channels u-net: a source separation model viewing each channel as the spectrogram of each source](https://arxiv.org/abs/1810.11520)
 
 ## Base Implimentation
 * https://github.com/Jeongseungwoo/Singing-Voice-Separation
