@@ -30,3 +30,7 @@ spectrogram-channels u-net: a source separation model viewing each channel as th
 
 ## Base Implimentation
 * https://github.com/Jeongseungwoo/Singing-Voice-Separation
+
+## To Do List
+* convert wav files to mp3 files
+* make tfrecord format files
