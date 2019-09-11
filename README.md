@@ -1,5 +1,5 @@
-# Singing-Voice-Separation
-This is an implementation of U-Net for vocal separation with tensorflow
+# Music-Separation
+This is an implementation of U-Net for vocal, bass, drums separation with tensorflow
 
 ## Requirement
 - librosa==0.6.2
