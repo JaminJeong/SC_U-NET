@@ -1,0 +1,9 @@
+.idea/*
+__pycache__
+*.pyc
+*.wav
+./data
+./Spectrogram
+./model
+./model_*
+.ipynb_checkpoints
