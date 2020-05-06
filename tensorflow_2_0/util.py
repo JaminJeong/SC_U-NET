@@ -87,7 +87,7 @@ def Magnitude_phase_y(spectrogram) :
 
 
 
-def sampling(X_mag,Y_mag) :
+def np_sampling(X_mag,Y_mag) :
     X = []
     y = []
     for mix, target in zip(X_mag,Y_mag) :
@@ -106,83 +106,22 @@ def sampling(X_mag,Y_mag) :
     print("y.shape : ", y.shape)
     return X, y
 
-
 import tensorflow as tf
 
-def _float_feature(value):
-  """Returns a float_list from a float / double."""
-  return tf.train.Feature(float_list=tf.train.FloatList(value=[value]))
+def tf_sampling(dataset) :
+    for data in dataset :
+        mix = tf.io.decode_raw(data['mix'], out_type=tf.float32)
+        mix_len = len(mix) / 53
+        starts = tf.random.uniform(shape=[(mix_len - patch_size) // SAMPLING_STRIDE], minval=0, maxval = mix_len - patch_size, dtype=tf.int32)
+        for start in starts:
+            end = start + patch_size
+            X.append(mix[1:, start:end, np.newaxis])
+            y.append(target[:, 1:, start:end])
 
-def _bytes_feature(value):
-  """Returns a bytes_list from a string / byte."""
-  if isinstance(value, type(tf.constant(0))):
-    value = value.numpy() # BytesList won't unpack a string from an EagerTensor.
-  return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
+    X = np.array(X)
+    print("X.shape : ", X.shape)
+    y = np.array(y)
+    y = np.einsum('ijkl->iklj', y)
+    print("y.shape : ", y.shape)
+    return X, y
 
-def _int64_feature(value):
-  """Returns an int64_list from a bool / enum / int / uint."""
-  return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
-
-def serialize_example(wave_mix, wave_vocal, wave_bass, wave_drums, wave_other):
-  """
-  Creates a tf.Example message ready to be written to a file.
-  """
-  # Create a dictionary mapping the feature name to the tf.Example-compatible
-  # data type.
-  feature = {
-      'mix': _bytes_feature(wave_mix),
-      'vocal': _bytes_feature(wave_vocal),
-      'bass': _bytes_feature(wave_bass),
-      'drums': _bytes_feature(wave_drums),
-      'other': _bytes_feature(wave_other),
-  }
-
-  # Create a Features message using tf.train.Example.
-  return tf.train.Example(features=tf.train.Features(feature=feature))
-
-# def open_file_and_convert_byte(filename):
-
-def maketfrecords(directory, tfrecords_name):
-    record_file = f'{tfrecords_name}.tfrecords'
-    print(os.path.join(directory, 'Spectrogram'))
-    assert os.path.isdir(os.path.join(directory, 'Spectrogram'))
-    filelist = find_files(os.path.join(directory, 'Spectrogram'), ext="npz")
-    with tf.io.TFRecordWriter(record_file) as writer:
-        print(f"filelist len : {len(filelist)}")
-        for file in filelist:
-            data = np.load(file)
-            mag_mix, _ = librosa.magphase(data['mix'])
-            mag_vocal, _ = librosa.magphase(data['vocal'])
-            mag_bass, _ = librosa.magphase(data['bass'])
-            mag_drums, _ = librosa.magphase(data['drums'])
-            mag_other, _ = librosa.magphase(data['other'])
-
-            mag_mix = bytes(mag_mix)
-            mag_vocal = bytes(mag_mix)
-            mag_bass = bytes(mag_bass)
-            mag_drums = bytes(mag_drums)
-            mag_other = bytes(mag_other)
-
-            # Write the raw image files to tfrecords files.
-            # First, process the two images into `tf.Example` messages.
-            # Then, write to a `.tfrecords` file.
-            tf_example = serialize_example(mag_mix, mag_vocal, mag_bass, mag_drums, mag_other)
-            writer.write(tf_example.SerializeToString())
-
-maketfrecords(".", "sound_seperator")
-
-# def save_tfrecord(self, name: str, func, shards: int = 1):
-#     filename = f'{self.path}/{self.name}-{name}.tfrecord'
-#     with tf.io.TFRecordWriter(filename) as writer:
-#         for count, (data, max_img, max_l) in enumerate(func):
-#             data = self._serialize_data(data)
-#             writer.write(data)
-#
-#     data = tf.data.TFRecordDataset(filename)
-#     for i in range(shards):
-#         writer = tf.data.experimental.TFRecordWriter(
-#             f'{filename}-{i:05}-of-{shards:05}')
-#         writer.write(data.shard(shards, i))
-#
-#     self.info.split(name, shards, count+1, max_img, max_l)
-#     Path(filename).unlink()

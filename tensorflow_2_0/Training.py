@@ -22,7 +22,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import os
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"   
-os.environ["CUDA_VISIBLE_DEVICES"]="0"
+os.environ["CUDA_VISIBLE_DEVICES"]="1"
 
 try:
   # %tensorflow_version only exists in Colab.
@@ -106,11 +106,14 @@ def fit(train_ds, epochs):
                                                         time.time()-start))
   checkpoint.save(file_prefix = checkpoint_prefix)
 
+from tfrecords import load_tfrecords
 
-X_list, Y_list = LoadSpectrogram(".")  # Mix spectrogram
-X_mag, X_phase = Magnitude_phase_x(X_list)
-Y_mag, _ = Magnitude_phase_y(Y_list)
-X, Y = sampling(X_mag, Y_mag)
+dataset = load_tfrecords('tensorflow_2_0/sound_seperator.tfrecords')
+
+# X_list, Y_list = LoadSpectrogram(".")  # Mix spectrogram
+# X_mag, X_phase = Magnitude_phase_x(X_list)
+# Y_mag, _ = Magnitude_phase_y(Y_list)
+# X, Y = sampling(X_mag, Y_mag)
 dataset_X = tf.data.Dataset.from_tensor_slices(X)
 dataset_Y = tf.data.Dataset.from_tensor_slices(Y)
 train_dataset = tf.data.Dataset.zip(zip(dataset_X, dataset_Y))
